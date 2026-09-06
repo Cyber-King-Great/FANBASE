@@ -1,0 +1,105 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function to verify admin
+    function isAdmin() {
+      return request.auth != null && (
+        request.auth.token.email == "cyberjoker391@gmail.com" ||
+        request.auth.token.admin == true ||
+        exists(/databases/$(database)/documents/admin_users/$(request.auth.uid))
+      );
+    }
+
+    // Public read-only collections
+    match /campaigns/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /categories/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /artists/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /albums/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /songs/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /candidates/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /candidateCategories/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /articles/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /adSlots/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /settings/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Aggregates and stats: readable by everyone, updated on vote
+    match /campaignStats/{id} {
+      allow read: if true;
+      allow create, update: if true;
+      allow delete: if isAdmin();
+    }
+    match /categoryStats/{id} {
+      allow read: if true;
+      allow create, update: if true;
+      allow delete: if isAdmin();
+    }
+    match /candidateStats/{id} {
+      allow read: if true;
+      allow create, update: if true;
+      allow delete: if isAdmin();
+    }
+    match /countryStats/{id} {
+      allow read: if true;
+      allow create, update: if true;
+      allow delete: if isAdmin();
+    }
+
+    // Votes: Public can record votes, user can read, admin can manage
+    match /votes/{id} {
+      allow read: if true;
+      allow create: if true;
+      allow update, delete: if isAdmin();
+    }
+
+    // Share events & newsletter subscribers
+    match /shareEvents/{id} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+    match /newsletterSubscribers/{id} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Security & Auditing
+    match /suspiciousVotes/{id} {
+      allow read, write: if isAdmin();
+    }
+    match /auditLogs/{id} {
+      allow read, write: if isAdmin();
+    }
+    match /admin_users/{id} {
+      allow read, write: if isAdmin();
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "Fanbase",
+  "description": "Who deserves a GRAMMY nomination? Independent fan prediction platform for global music awards.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
